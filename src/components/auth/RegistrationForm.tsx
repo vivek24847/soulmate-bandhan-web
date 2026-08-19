@@ -1,96 +1,129 @@
+"use client";
+
 import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/Button";
-import { Checkbox } from "@/components/ui/Checkbox";
-import { Input } from "@/components/ui/Input";
-import { PasswordInput } from "@/components/auth/PasswordInput";
-import { SocialLogin } from "@/components/auth/SocialLogin";
+import { useActionState, useEffect } from "react";
+import { register } from "../../app/actions/auth"
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+
+const initialState: any = {
+  success: false,
+  message: "",
+  error: {},
+};
+
 
 export function RegistrationForm() {
+  const [state, formAction, isPending] = useActionState(
+    register,
+    initialState
+  );
+
+  const router = useRouter()
+
+   useEffect(() => {
+    if (!state.message) return;
+
+    if (state.success) {
+      toast.success(state.message);
+       router.push("/login")
+    } else {
+      toast.error(state.message);
+    }
+  }, [state]);
+
   return (
-    <form className="flex flex-col gap-4">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <Input label="Full Name" placeholder="e.g. Aditi Sharma" />
-        <Input label="Email" type="email" placeholder="aditi@example.com" />
+    <form action={formAction} className="flex flex-col gap-6">
+      {/* Name */}
+      <div className="flex flex-col gap-2">
+        <label
+          htmlFor="name"
+          className="font-sans text-[12px] font-semibold uppercase tracking-[0.05em] text-on-surface-variant"
+        >
+          Name
+        </label>
+
+        <input
+          id="name"
+          name="name"
+          type="text"
+          placeholder="Enter your name"
+          className="h-12 w-full rounded-lg border border-surface-variant bg-surface px-4 font-sans text-[16px] text-on-surface outline-none transition-all placeholder:text-on-surface-variant/60 focus:border-primary focus:ring-1 focus:ring-primary"
+        />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <div className="flex flex-col gap-2">
-          <label className="font-sans text-[12px] font-semibold uppercase tracking-[0.05em] text-on-surface-variant">
-            Mobile
-          </label>
-          <div className="flex gap-2">
-            <select className="h-12 w-24 rounded-lg border border-surface-variant bg-surface px-3 font-sans text-[16px] text-on-surface outline-none transition-all focus:border-primary focus:ring-1 focus:ring-primary">
-              <option>+91</option>
-              <option>+1</option>
-              <option>+44</option>
-            </select>
-            <Input className="flex-1" label="Mobile number" placeholder="98765 43210" />
-          </div>
-        </div>
-        <PasswordInput label="Password" placeholder="••••••••" />
+      {/* Email */}
+      <div className="flex flex-col gap-2">
+        <label
+          htmlFor="email"
+          className="font-sans text-[12px] font-semibold uppercase tracking-[0.05em] text-on-surface-variant"
+        >
+          Email
+        </label>
+
+        <input
+          id="email"
+          name="email"
+          type="email"
+          placeholder="Enter your email"
+          className="h-12 w-full rounded-lg border border-surface-variant bg-surface px-4 font-sans text-[16px] text-on-surface outline-none transition-all placeholder:text-on-surface-variant/60 focus:border-primary focus:ring-1 focus:ring-primary"
+        />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <Input label="Date of Birth" type="date" />
-        <Input label="Location" placeholder="City, Country" />
+      {/* Phone */}
+      <div className="flex flex-col gap-2">
+        <label
+          htmlFor="phone"
+          className="font-sans text-[12px] font-semibold uppercase tracking-[0.05em] text-on-surface-variant"
+        >
+          Phone
+        </label>
+
+        <input
+          id="phone"
+          name="phone"
+          type="tel"
+          placeholder="98765 43210"
+          className="h-12 w-full rounded-lg border border-surface-variant bg-surface px-4 font-sans text-[16px] text-on-surface outline-none transition-all placeholder:text-on-surface-variant/60 focus:border-primary focus:ring-1 focus:ring-primary"
+        />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <div className="flex flex-col gap-2">
-          <label className="font-sans text-[12px] font-semibold uppercase tracking-[0.05em] text-on-surface-variant">
-            Gender
-          </label>
-          <div className="flex gap-3">
-            {["Male", "Female"].map((option) => (
-              <label
-                key={option}
-                className="flex flex-1 cursor-pointer items-center justify-center rounded-lg border border-surface-variant bg-surface px-3 py-3 text-[14px] text-on-surface-variant transition-colors has-[:checked]:border-primary has-[:checked]:bg-primary/10 has-[:checked]:text-primary hover:border-primary"
-              >
-                <input className="hidden" type="radio" name="gender" value={option.toLowerCase()} />
-                <span>{option}</span>
-              </label>
-            ))}
-          </div>
-        </div>
+      {/* Password */}
+      <div className="flex flex-col gap-2">
+        <label
+          htmlFor="password"
+          className="font-sans text-[12px] font-semibold uppercase tracking-[0.05em] text-on-surface-variant"
+        >
+          Password
+        </label>
 
-        <div className="flex flex-col gap-2">
-          <label className="font-sans text-[12px] font-semibold uppercase tracking-[0.05em] text-on-surface-variant">
-            Looking For
-          </label>
-          <div className="flex gap-3">
-            {["Groom", "Bride"].map((option) => (
-              <label
-                key={option}
-                className="flex flex-1 cursor-pointer items-center justify-center rounded-lg border border-surface-variant bg-surface px-3 py-3 text-[14px] text-on-surface-variant transition-colors has-[:checked]:border-primary has-[:checked]:bg-primary/10 has-[:checked]:text-primary hover:border-primary"
-              >
-                <input
-                  className="hidden"
-                  type="radio"
-                  name="looking_for"
-                  value={option.toLowerCase()}
-                />
-                <span>{option}</span>
-              </label>
-            ))}
-          </div>
-        </div>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          placeholder="••••••••"
+          className="h-12 w-full rounded-lg border border-surface-variant bg-surface px-4 font-sans text-[16px] text-on-surface outline-none transition-all placeholder:text-on-surface-variant/60 focus:border-primary focus:ring-1 focus:ring-primary"
+        />
       </div>
 
-      <Checkbox
-        label={
-          <>
-            I agree to the <span className="text-primary hover:underline">Terms &amp; Conditions</span>{" "}
-            and <span className="text-primary hover:underline">Privacy Policy</span>.
-          </>
-        }
-      />
+      {/* Submit */}
+      <div className="mt-2 flex flex-col gap-4">
+        <button
+          type="submit"
+          disabled={isPending}
+          className="flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 font-sans text-[16px] font-semibold text-on-primary transition-all hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {isPending ? "Creating Account..." : "Create Account"}
 
-      <div className="mt-4 flex flex-col gap-4">
-        <Button type="submit">
-          Create Account
-          <ArrowRight className="h-5 w-5" />
-        </Button>
-        <SocialLogin label="Sign up with Google" />
+          {!isPending && <ArrowRight className="h-5 w-5" />}
+        </button>
+
+        <button
+          type="button"
+          className="flex h-12 w-full items-center justify-center gap-2 rounded-lg border border-surface-variant bg-surface px-4 font-sans text-[16px] font-semibold text-on-surface transition-all hover:bg-surface-variant/20 focus:outline-none focus:ring-1 focus:ring-primary"
+        >
+          Sign up with Google
+        </button>
       </div>
     </form>
   );
