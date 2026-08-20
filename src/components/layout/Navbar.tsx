@@ -3,7 +3,7 @@ import { Avatar } from "@/components/ui/Avatar";
 import { cn } from "@/lib/cn";
 
 type NavbarProps = {
-  active?: "discover" | "messages" | "profile";
+  active?: "discover" | "messages" | "profile" | "requests" | "connections";
 };
 
 export function Navbar({ active = "discover" }: NavbarProps) {
@@ -38,7 +38,7 @@ export function Navbar({ active = "discover" }: NavbarProps) {
             Soulmate Bandhan
           </span>
         </div>
-        <nav className="hidden items-center gap-10 md:flex">{item("discover", "Discover")}{item("messages", "Messages")}{item("profile", "Profile")}</nav>
+        <nav className="hidden items-center gap-10 md:flex">{item("discover", "Discover")}{item("requests", "Requests")}{item("connections", "Connections")}{item("messages", "Messages")}{item("profile", "Profile")}</nav>
         <div className="flex items-center gap-4">
           <Badge className="border border-primary text-primary">Premium</Badge>
           <Avatar
